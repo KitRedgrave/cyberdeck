@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+#
+GUILE_LOAD_PATH=./ exec "$@"
