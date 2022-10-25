@@ -159,7 +159,11 @@
 
        (awful.key [ modkey ] "p"
                   #(awful.spawn "rofi-pass")
-                  {:description "run rofi-pass" :group "launcher"})))
+                  {:description "run rofi-pass" :group "launcher"})
+       (awful.key [] "XF86AudioLowerVolume"
+                  #(awful.spawn "amixer set Master 2%-"))
+       (awful.key [] "XF86AudioRaiseVolume"
+                  #(awful.spawn "amixer set Master 2%+"))))
 
 (local clientkeys
        (gears.table.join
