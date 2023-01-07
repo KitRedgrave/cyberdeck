@@ -80,6 +80,8 @@
    ;; Each screen has its own tag table.
    (awful.tag [ "1" "2" "3" "4" "5" "6" "7" "8" "9" ] s machi.default_layout)
 
+   (gears.wallpaper.fit (.. (gears.filesystem.get_configuration_dir) "wallpaper.jpg") s)
+
    ;; Create a taglist widget
    (set s.mytaglist (awful.widget.taglist {
                                            :screen s
@@ -118,9 +120,7 @@
                            :align "right"
                            1 (wibox.widget.systray)
                            2 (cpu)
-                           3 (ram {
-                                   :widget_show_buf false
-                                   })
+                           3 (ram {:widget_show_buf false})
                            4 (battery {
                                       :path_to_icons "/home/alice/.guix-profile/share/icons/Arc/status/symbolic/"
                                        })
@@ -325,5 +325,5 @@
 (client.connect_signal "unfocus" (fn [c] (set c.border_color beautiful.border_normal)))
 
 ;; autostart useful tools
-(awful.spawn "picom")
+(awful.spawn "picom -b")
 (awful.spawn "nm-applet")

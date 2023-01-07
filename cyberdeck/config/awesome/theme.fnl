@@ -13,7 +13,7 @@
      fg_focus "#ffffff"
      bg_urgent "#ff0000"
      fg_urgent "#ffffff"]
-  {:font "monospace 10"
+  {:font "source code pro 12"
    :bg_normal bg_normal
    :bg_focus bg_focus
    :bg_urgent bg_urgent

@@ -1,4 +1,5 @@
 (define-module (cyberdeck features wm)
+  #:use-module (gnu packages gnome-xyz)
   #:use-module (gnu packages password-utils)
   #:use-module (gnu packages wm)
   #:use-module (gnu packages xorg)
@@ -25,7 +26,8 @@
       (list
        awesome
        rofi
-       rofi-pass))))
+       rofi-pass
+       arc-icon-theme))))
   (feature
    (name 'awesomewm)
    (values '((awesome . awesome)))
