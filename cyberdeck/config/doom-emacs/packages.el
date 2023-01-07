@@ -53,3 +53,6 @@
 (package! hyperbole)
 (package! tree-sitter)
 (package! tree-sitter-langs)
+
+(package! kubernetes-evil)
+(package! kubernetes)

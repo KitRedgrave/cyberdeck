@@ -25,11 +25,7 @@
   (add-to-list 'yas-snippet-dirs "/home/alice/projects/guix/etc/snippets")
   (yas-reload-all))
 
-;;(use-package! rmoo
-;;  :config
-;;  (add-to-list 'auto-mode-alist '("\\.moo$" . moocode-mode)))
-
-(setq magit-repository-directories '(("~/Projects" . 1))
+(setq magit-repository-directories '(("~/projects" . 1))
       magit-save-repository-buffers nil
       magit-inhibit-save-previous-winconf t
       transient-values '((magit-rebase "--autosquash" "--autostash")
