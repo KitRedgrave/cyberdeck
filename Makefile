@@ -9,7 +9,9 @@ kitbook-system:
 kithub-home:
 	RDE_TARGET=kithub-home \
 	guix home reconfigure -L . cyberdeck.scm
-
 kithub-system:
 	RDE_TARGET=kithub-system \
 	guix system reconfigure -L . cyberdeck.scm
+
+update:
+	guix pull -C channels.scm
