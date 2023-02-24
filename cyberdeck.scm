@@ -214,10 +214,12 @@
    (feature-networking)
    (feature-ssh)
    (feature-desktop-services)
-   (feature-pipewire)
-   (feature-awesomewm)
+   (feature-pipewire
+    #:pipewire pipewire)
+   (feature-sway)
    (feature-arcan)
-   (feature-flatpak)))
+   (feature-flatpak)
+   (feature-docker)))
 
 (define-public kitbook-config
   (rde-config
