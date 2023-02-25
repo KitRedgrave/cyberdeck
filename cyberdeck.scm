@@ -130,7 +130,7 @@
      (bootloader grub-efi-bootloader)
      (targets '("/boot/efi"))))
    (feature-kernel
-    ;;#:kernel linux-surface-5.19
+    #:kernel linux-surface-5.19
     #:initrd microcode-initrd
     #:firmware
     (list linux-firmware)
