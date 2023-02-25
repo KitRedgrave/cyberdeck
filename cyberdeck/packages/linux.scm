@@ -65,6 +65,32 @@
     ("CONFIG_VIDEO_OV5693" . m)
     ("CONFIG_VIDEO_OV8865" . m)))
 
+(define-public linux-surface-6.1
+  (customize-linux
+   #:name "surface"
+   (origin
+     (method url-fetch)
+     (uri "https://www.kernel.org/pub/linux/kernel/v6.x/linux-6.1.11.tar.xz")
+     (sha256 (base32 "17qr061b617g64s60svw7lf9s5vn5zwd1y96cwckjpr5shcn1fxq"))
+     (patches
+      (parameterize
+          ((%patch-path
+            (map (lambda (directory)
+                   (string-append directory "/cyberdeck/packages/patches/linux-surface/6.1"))
+                 %load-path)))
+        (search-patches "0001-surface3-oemb.patch"
+                        "0002-mwifiex.patch"
+                        "0003-ath10k.patch"
+                        "0004-ipts.patch"
+                        "0005-ithc.patch"
+                        "0006-surface-sam.patch"
+                        "0007-surface-sam-over-hid.patch"
+                        "0008-surface-button.patch"
+                        "0009-surface-typecover.patch"
+                        "0010-cameras.patch"
+                        "0011-amd-gpio.patch"
+                        "0012-rtc.patch"))))))
+
 (define-public linux-surface-5.19
   (make-custom-linux
    "5.19.7"
@@ -76,9 +102,8 @@
       (parameterize
        ((%patch-path
          (map (lambda (directory)
-                (string-append directory "/cyberdeck/packages/patches/linux-surface"))
+                (string-append directory "/cyberdeck/packages/patches/linux-surface/5.19"))
               %load-path)))
-       ;; https://github.com/linux-surface/linux-surface/tree/master/patches/5.19
        (search-patches "0001-surface3-oemb.patch"
                        "0002-mwifiex.patch"
                        "0003-ath10k.patch"
