@@ -247,6 +247,8 @@
                     :placement (+ awful.placement.no_overlap awful.placement.no_offscreen)
                     :maximized false
                     :minimized false
+                    :maximized_horizontal false
+                    :maximized_vertical false
                     }
        }
       {
@@ -256,6 +258,8 @@
               }
        :properties {:opacity 1
                     :maximized false
+                    :maximized_horizontal false
+                    :maximized_vertical false
                     :floating false}
        }
 
