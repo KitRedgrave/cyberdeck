@@ -4,7 +4,6 @@
 (require "awful.autofocus")
 ;; Widget and layout library
 (local wibox (require "wibox"))
-(local machi (require "layout-machi"))
 
 (local battery (require "awesome-wm-widgets.battery-widget.battery"))
 (local cpu (require "awesome-wm-widgets.cpu-widget.cpu-widget"))
@@ -13,6 +12,9 @@
 
 ;; Theme handling library
 (local beautiful (require "beautiful"))
+(local machi (require "layout-machi"))
+(local machina (require "machina"))
+
 ;; Notification library
 (local naughty (require "naughty"))
 (local menubar (require "menubar"))
@@ -43,7 +45,6 @@
 ;; Variable definitions
 ;; Themes define colours, icons, font and wallpapers.
 (beautiful.init (.. (gears.filesystem.get_themes_dir) "zenburn/theme.lua"))
-(set beautiful.layout_machi (machi.get_icon))
 
 ;; This is used later as the default terminal and editor to run.
 (var terminal "kitty")
@@ -76,10 +77,7 @@
 
 (awful.screen.connect_for_each_screen
  (fn [s]
-
-   ;; Each screen has its own tag table.
    (awful.tag [ "1" "2" "3" "4" "5" "6" "7" "8" "9" ] s machi.default_layout)
-
    (gears.wallpaper.fit (.. (gears.filesystem.get_configuration_dir) "wallpaper.jpg") s)
 
    ;; Create a taglist widget
@@ -92,21 +90,6 @@
    ;; Create the wibox
    (set s.mywibox (awful.wibar { :position "top" :screen s }))
 
-   ;; Create a tasklist
-   (set s.mytasklist (awful.widget.tasklist
-                      {
-                       :screen s
-                       :filter awful.widget.tasklist.filter.currenttags
-                       :buttons (gears.table.join
-                                 (awful.button {} 1 (fn [c]
-                                                        (if (= client.focus c)
-                                                            (set c.minimized true)
-                                                            (c:emit_signal "request::activate" :tasklist {:raise true}))))
-                                 (awful.button {} 3 #(awful.menu.client_list {:theme {:width 250}}))
-                                 (awful.button {} 4 #(awful.client.focus.byidx -1))
-                                 (awful.button {} 5 #(awful.client.focus.byidx  1)))
-                       }))
-
    ;; Add widgets to the wibox
    (: s.mywibox :setup {
                         :layout wibox.layout.align.horizontal
@@ -114,7 +97,7 @@
                            :layout wibox.layout.fixed.horizontal
                            1 s.mytaglist
                            }
-                        2 s.mytasklist
+                        2 {:layout wibox.layout.fixed.horizontal}
                         3 { ;; Right widgets
                            :layout wibox.layout.fixed.horizontal
                            :align "right"
@@ -142,10 +125,7 @@
        (awful.key [ modkey "Shift" ] "r"
                   awesome.restart
                   {:description "reload awesome" :group "awesome"})
-       (awful.key [ modkey "Shift" ] "q"
-                  awesome.quit
-                  {:description "quit awesome" :group "awesome"})
-       (awful.key [ modkey "Shift" ] "Tab"
+       (awful.key [ modkey "Shift"] "Tab"
                   #(machi.default_editor.start_interactive)
                   {:description "edit current layout" :group "layout"})
        (awful.key [ modkey ] "Tab"
@@ -177,29 +157,29 @@
                    awful.client.floating.toggle
                    {:description "toggle floating" :group "client"})
         (awful.key [ modkey ] "h"
-                   #(awful.client.focus.global_bydirection "left")
-                   {:description "focus left across screens" :group "client"})
+                   #(machina.focus_by_direction "left")
+                   {:description "focus left" :group "client"})
         (awful.key [ modkey ] "j"
-                   #(awful.client.focus.global_bydirection "down")
-                   {:description "focus down across screens" :group "client"})
+                   #(machina.focus_by_direction "down")
+                   {:description "focus down" :group "client"})
         (awful.key [ modkey ] "k"
-                   #(awful.client.focus.global_bydirection "up")
-                   {:description "focus up across screens" :group "client"})
+                   #(machina.focus_by_direction "up")
+                   {:description "focus up" :group "client"})
         (awful.key [ modkey ] "l"
-                   #(awful.client.focus.global_bydirection "right")
-                   {:description "focus right across screens" :group "client"})
+                   #(machina.focus_by_direction "right")
+                   {:description "focus right" :group "client"})
         (awful.key [ modkey "Shift" ] "h"
-                   #($:move_to_screen 1)
-                   {:description "move left one screen" :group "client"})
+                   #(machina.shift_by_direction "left")
+                   {:description "move focused client left" :group "client"})
         (awful.key [ modkey "Shift" ] "j"
-                   #(awful.client.swap.byidx 1)
-                   {:description "move down by index" :group "client"})
+                   #(machina.shift_by_direction "down")
+                   {:description "move focused client down" :group "client"})
         (awful.key [ modkey "Shift" ] "k"
-                   #(awful.client.swap.byidx -1)
-                   {:description "move up by index" :group "client"})
+                   #(machina.shift_by_direction "up")
+                   {:description "move focused client up" :group "client"})
         (awful.key [ modkey "Shift" ] "l"
-                   #($:move_to_screen -1)
-                   {:description "move right one screen" :group "client"})))
+                   #(machina.shift_by_direction "right")
+                   {:description "move focused client right" :group "client"})))
 
 (local clientbuttons
         (gears.table.join
@@ -265,7 +245,18 @@
                     :buttons clientbuttons
                     :screen awful.screen.preferred
                     :placement (+ awful.placement.no_overlap awful.placement.no_offscreen)
+                    :maximized false
+                    :minimized false
                     }
+       }
+      {
+       ;; Firefox gets stuck if it ever gets maximized, so don't let it
+       :rule {
+              :class "firefox"
+              }
+       :properties {:opacity 1
+                    :maximized false
+                    :floating false}
        }
 
       ;; Floating clients.

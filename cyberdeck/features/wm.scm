@@ -32,8 +32,7 @@
 
   (define (awesomewm-system-services config)
     (list
-     (service slim-service-type)
-     (screen-locker-service xscreensaver "xscreensaver-auth")
+     (service sddm-service-type)
      (simple-service
       'add-awesomewm-packages
       profile-service-type
@@ -61,44 +60,36 @@
 
 
 
-(define* (feature-sway
+(define* (feature-i3
           #:key
           (extra-config '())
-          (sway sway)
+          (i3 i3)
           (alacritty alacritty)
-          (fuzzel fuzzel)
- (xdg-desktop-portal xdg-desktop-portal)
-          (xdg-desktop-portal-wlr xdg-desktop-portal-wlr)
+          (rofi rofi)
+          (xdg-desktop-portal xdg-desktop-portal)
           ;; Logo key. Use Mod1 for Alt.
-          (sway-mod 'Mod4)
-          (add-keyboard-layout-to-config? #t)
-          (xwayland? #t))
-  "Setup and configure sway."
+          (i3-mod 'Mod4))
+  "Setup and configure i3."
   (ensure-pred sway-config? extra-config)
   (ensure-pred boolean? add-keyboard-layout-to-config?)
-  (ensure-pred boolean? xwayland?)
-  (ensure-pred any-package? sway)
-  (ensure-pred any-package? foot)
-  (ensure-pred any-package? bemenu)
+  (ensure-pred any-package? i3)
+  (ensure-pred any-package? rofi)
+  (ensure-pred any-package? alacritty)
   (ensure-pred any-package? xdg-desktop-portal)
-  (ensure-pred any-package? xdg-desktop-portal-wlr)
 
-  (define (sway-system-services config)
+  (define (i3-system-services config)
     (list
      (service sddm-service-type
               (sddm-configuration
-               (display-server "wayland")))
+               (display-server "x11")))
      (simple-service
       'packages-for-sway
       profile-service-type
-      (list sway))))
+      (list i3))))
 
-  (define (sway-home-services config)
-    "Returns home services related to sway."
-    (let* ((kb-layout      (get-value 'keyboard-layout config))
-           (layout-config  (if (and add-keyboard-layout-to-config? kb-layout)
-                               (keyboard-layout-to-sway-config kb-layout)
-                               '()))
+  (define (i3-home-services config)
+    "Returns home services related to i3."
+    (let* ((kb-layout      (get-value 'keyboard-layout config)))
 
            (lock-cmd
             (get-value 'default-screen-locker config "loginctl lock-session"))
@@ -111,15 +102,15 @@
                         (file-append alacritty "/bin/alacritty")))
            (default-application-launcher
              (get-value 'default-application-launcher config
-                        (file-append fuzzel "/bin/fuzzel")))
+                        (file-append rofi "/bin/rofi")))
 
            (default-password-launcher
              (get-value 'default-password-launcher config
-                        (file-append tessen "/bin/tessen")))
+                        (file-append rofi-pass "/bin/rofi-pass")))
 
            (default-notification-handler
              (get-value 'default-notification-handler config
-                        (file-append mako "/bin/mako")))
+                        (file-append dunst "/bin/dunst")))
 
            (shepherd-configuration (home-shepherd-configuration
                                     (auto-start? #f)
@@ -146,12 +137,11 @@
         (home-sway-configuration
          (package sway)
          (config
-          `(,@(if xwayland? `((xwayland enable)) '())
-            (,#~"")
+          `((,#~"")
             ,@layout-config
 
             (,#~"\n\n# General settings:")
-            (set $mod ,sway-mod)
+            (set $mod ,i3-mod)
 
             (floating_modifier $mod normal)
 
@@ -177,12 +167,6 @@
             (bindsym --to-code $mod+f fullscreen)
             (bindsym $mod+Shift+space floating toggle)
             (bindsym $mod+Ctrl+space focus mode_toggle)
-
-            ;; (bindsym --to-code $mod+Shift+o
-            ;;          #{[workspace=__focused__]}# focus next)
-
-            ;; TODO: Add keybindings for controlling swaynag
-            ;; <https://wiki.archlinux.org/title/Sway#Control_swaynag_with_the_keyboard>
 
             (bindsym $mod+h focus left)
             (bindsym $mod+j focus down)
@@ -253,7 +237,7 @@
 
        (when (get-value 'default-notification-handler config)
          (simple-service
-          'sway-enable-mako
+          'i3-enable-dunst
           home-sway-service-type
           `((,#~"")
             (exec ,(get-value 'default-notification-handler config)))))

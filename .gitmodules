@@ -1,3 +1,12 @@
 [submodule "cyberdeck/config/awesome/awesome-wm-widgets"]
 	path = cyberdeck/config/awesome/awesome-wm-widgets
 	url = https://github.com/streetturtle/awesome-wm-widgets
+[submodule "cyberdeck/config/awesome/battery-widget"]
+	path = cyberdeck/config/awesome/battery-widget
+	url = https://github.com/deficient/battery-widget
+[submodule "cyberdeck/config/awesome/machina"]
+	path = cyberdeck/config/awesome/machina
+	url = https://github.com/basaran/awesomewm-machina
+[submodule "cyberdeck/config/awesome/layout-machi"]
+	path = cyberdeck/config/awesome/layout-machi
+	url = https://github.com/xinhaoyuan/layout-machi

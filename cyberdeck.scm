@@ -130,7 +130,7 @@
      (bootloader grub-efi-bootloader)
      (targets '("/boot/efi"))))
    (feature-kernel
-    #:kernel linux-surface-5.19
+    #:kernel linux-surface-6.1
     #:initrd microcode-initrd
     #:firmware
     (list linux-firmware)
@@ -216,7 +216,7 @@
    (feature-desktop-services)
    (feature-pipewire
     #:pipewire pipewire)
-   (feature-sway)
+   (feature-awesomewm)
    (feature-arcan)
    (feature-flatpak)
    (feature-docker)))
