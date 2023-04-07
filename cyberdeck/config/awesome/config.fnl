@@ -14,12 +14,12 @@
 (local beautiful (require "beautiful"))
 (local machi (require "layout-machi"))
 (local machina (require "machina"))
+(local cyclefocus (require "awesome-cyclefocus"))
 
 ;; Notification library
 (local naughty (require "naughty"))
 (local menubar (require "menubar"))
 (local hotkeys_popup (require "awful.hotkeys_popup"))
-(local theme (require "theme"))
 
 ;; Error handling
 ;; Check if awesome encountered an error during startup and fell back to
@@ -47,8 +47,8 @@
 (beautiful.init (.. (gears.filesystem.get_themes_dir) "zenburn/theme.lua"))
 
 ;; This is used later as the default terminal and editor to run.
-(var terminal "kitty")
-(var editor (or (os.getenv "EDITOR") "nano"))
+(var terminal "alacritty")
+(var editor (or (os.getenv "EDITOR") "emacsclient"))
 (var editor_cmd (.. terminal " -e " editor))
 
 ;; Default modkey.
@@ -117,7 +117,9 @@
        (awful.key [ modkey ] "s"
                   hotkeys_popup.show_help
                   { :description "show help" :group "awesome"})
-
+       (awful.key [ modkey] "Tab"
+                  #(machi.switcher.start)
+                  { :description "open machi switcher" :group "awesome" })
        ;; Standard program
        (awful.key [ modkey ] "Return"
                   #(awful.spawn terminal)
@@ -128,9 +130,6 @@
        (awful.key [ modkey "Shift"] "Tab"
                   #(machi.default_editor.start_interactive)
                   {:description "edit current layout" :group "layout"})
-       (awful.key [ modkey ] "Tab"
-                  #(machi.switcher.start)
-                  {:description "switch windows" :group "layout"})
 
        ;; Prompt
        (awful.key [ modkey ] "r"
@@ -150,6 +149,10 @@
         (awful.key [ modkey ] "f"
                    (fn [c] (set c.fullscreen (not c.fullscreen)) (: c :raise))
                    {:description "toggle fullscreen" :group "client"})
+        (cyclefocus.key [ "Mod1" ] "Tab"
+                        {:cycle_filters [ cyclefocus.filters.same_screen
+                                          cyclefocus.filters.common_tag ]
+                         :keys [ "Tab" "ISO_Left_Tab" ]})
         (awful.key [ modkey "Shift" ] "c"
                    (fn [c] (: c :kill))
                    {:description "close" :group "client"})
@@ -261,6 +264,16 @@
                     :maximized_horizontal false
                     :maximized_vertical false
                     :floating false}
+       }
+      {
+       :rule {
+              :class "Steam"
+              }
+       :properties {:floating true
+                    :size_hints_honor false
+                    :border_width 0
+                    :titlebars_enable false
+                    }
        }
 
       ;; Floating clients.

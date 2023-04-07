@@ -12,6 +12,7 @@
   #:use-module (gnu services desktop)
   #:use-module (gnu services linux)
   #:use-module (gnu services sysctl)
+  #:use-module (gnu services virtualization)
   #:use-module (gnu home services)
   #:use-module (gnu system file-systems)
   #:use-module (gnu system keyboard)
@@ -22,6 +23,7 @@
   #:use-module (cyberdeck features docker)
   #:use-module (cyberdeck features flatpak)
   #:use-module (cyberdeck features input)
+  #:use-module (cyberdeck features networking)
   #:use-module (cyberdeck features password-utils)
   #:use-module (cyberdeck features power)
   #:use-module (cyberdeck features wm)
@@ -36,7 +38,6 @@
   #:use-module (rde features gnupg)
   #:use-module (rde features keyboard)
   #:use-module (rde features linux)
-  #:use-module (rde features networking)
   #:use-module (rde features security-token)
   #:use-module (rde features shells)
   #:use-module (rde features ssh)
@@ -55,7 +56,7 @@
     #:user-name "alice"
     #:full-name "Catherine Alice Redgrave"
     #:email "me@constructed.space"
-    #:user-groups '("netdev" "audio" "video" "input" "wheel" "dialout"))
+    #:user-groups '("netdev" "audio" "video" "input" "wheel" "dialout" "kvm" "libvirt"))
    (feature-gnupg
     #:gpg-primary-key "D984D86CF8B7F35D"
     #:pinentry-flavor 'rofi)
@@ -71,7 +72,6 @@
                        "terminate:ctrl_alt_bksp")))
    (feature-xdg)
    (feature-git)
-   (feature-bash)
    (feature-zsh
     #:default-shell? #t
     #:enable-zsh-autosuggestions? #t)))
@@ -210,7 +210,11 @@
                    (acpid-configuration
                     (acpid acpid)))
           (service earlyoom-service-type)
-          (udev-rules-service 'rtl-sdr rtl-sdr)))
+          (udev-rules-service 'rtl-sdr rtl-sdr)
+          (service libvirt-service-type
+                   (libvirt-configuration
+                    (auth-unix-ro "none")
+                    (auth-unix-rw "none")))))
    (feature-networking)
    (feature-ssh)
    (feature-desktop-services)

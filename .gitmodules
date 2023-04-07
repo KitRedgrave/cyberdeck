@@ -10,3 +10,9 @@
 [submodule "cyberdeck/config/awesome/layout-machi"]
 	path = cyberdeck/config/awesome/layout-machi
 	url = https://github.com/xinhaoyuan/layout-machi
+[submodule "cyberdeck/config/awesome/awesome-switcher"]
+	path = cyberdeck/config/awesome/awesome-switcher
+	url = https://github.com/berlam/awesome-switcher
+[submodule "cyberdeck/config/awesome/awesome-cyclefocus"]
+	path = cyberdeck/config/awesome/awesome-cyclefocus
+	url = https://github.com/blueyed/awesome-cyclefocus
