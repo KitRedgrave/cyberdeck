@@ -1,4 +1,5 @@
 (define-module (cyberdeck features wm)
+  #:use-module (gnu packages compton)
   #:use-module (gnu packages freedesktop)
   #:use-module (gnu packages gnome-xyz)
   #:use-module (gnu packages image)
@@ -24,7 +25,29 @@
   #:use-module (srfi srfi-1)
 
   #:export (feature-awesomewm
-            feature-sway))
+            feature-i3))
+
+(define* (feature-i3
+          #:key
+          (i3 i3-wm))
+  "Setup and configure i3"
+
+  (define (i3-system-services config)
+    (list
+     (simple-service
+      'add-i3-packages
+      profile-service-type
+      (list
+       i3-wm
+       rofi
+       rofi-pass
+       polybar
+       picom))))
+
+  (feature
+   (name 'i3)
+   (values '((i3 . i3)))
+   (system-services-getter i3-system-services)))
 
 (define* (feature-awesomewm
           #:key
@@ -33,8 +56,6 @@
 
   (define (awesomewm-system-services config)
     (list
-     (service sddm-service-type)
-     (screen-locker-service xscreensaver "xscreensaver")
      (simple-service
       'add-awesomewm-packages
       profile-service-type

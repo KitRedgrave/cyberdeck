@@ -11,8 +11,11 @@
   #:use-module (gnu services base)
   #:use-module (gnu services desktop)
   #:use-module (gnu services linux)
+  #:use-module (gnu services sddm)
+  #:use-module (gnu services syncthing)
   #:use-module (gnu services sysctl)
   #:use-module (gnu services virtualization)
+  #:use-module (gnu services vpn)
   #:use-module (gnu home services)
   #:use-module (gnu system file-systems)
   #:use-module (gnu system keyboard)
@@ -28,6 +31,7 @@
   #:use-module (cyberdeck features power)
   #:use-module (cyberdeck features wm)
   #:use-module (cyberdeck packages linux)
+  #:use-module (cyberdeck packages smalltalk)
   #:use-module (cyberdeck system services linux)
   #:use-module (nongnu packages linux)
   #:use-module (nongnu packages nvidia)
@@ -214,16 +218,19 @@
           (service libvirt-service-type
                    (libvirt-configuration
                     (auth-unix-ro "none")
-                    (auth-unix-rw "none")))))
+                    (auth-unix-rw "none")))
+          (service sddm-service-type)))
    (feature-networking)
    (feature-ssh)
    (feature-desktop-services)
    (feature-pipewire
     #:pipewire pipewire)
    (feature-awesomewm)
+   (feature-i3)
    (feature-arcan)
    (feature-flatpak)
-   (feature-docker)))
+   (feature-docker)
+   (feature-tailscale)))
 
 (define-public kitbook-config
   (rde-config
